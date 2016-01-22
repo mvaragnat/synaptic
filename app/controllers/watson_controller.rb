@@ -40,7 +40,7 @@ class WatsonController < ApplicationController
 
       @concepts = Array.new
       concepts_ids = Array.new
-      max_concepts = 3
+      max_concepts = ENV["MAX_CONCEPTS"].to_i
       n = 0
 
       #concepts are sent in decreasing probability order
