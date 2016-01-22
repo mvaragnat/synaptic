@@ -28,17 +28,22 @@ Synaptic needs a few configuration steps to work. Basically you need to open a W
 2) From the Bluemix console, open the instance. In "Service Credentials" (you may have to create a new set of credentials if they don't already exists), get your username and password
 
 3) Use this curl command to get your concept insights account ID (replace USERNAME and PASSWORD)
-'''
+
+```
 curl -u USERNAME:PASSWORD 'https://gateway.watsonplatform.net/concept-insights/api/v2/accounts'
-'''
+```
+
 4) Use this curl command to get create to concept insights corpus - one for tests and development, and one for production (replace USERNAME, PASSWORD, ACCOUNT by their values, and choose a name for CORPUS)
-'''
+
+```
 curl -u USERNAME:PASSWORD -X PUT -d '{"access":"private'}' 'https://gateway.watsonplatform.net/concept-insights/api/v2/corpora/ACCOUNT/CORPUS'
-'''
+```
+
 5) Create a Readability account and get your [Readability Parser API](https://www.readability.com/developers/api/parser) token
 
 6) In /config, create an application.yml file that looks like this (figaro gem is already bundled) :
-'''
+
+```
 READABILITY_TOKEN: XXXXXXXXXXXXXXXX
 WATSON_USERNAME: XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
 WATSON_PASSWORD: XXXXX
@@ -50,11 +55,13 @@ production:
 
 development:
   WATSON_CORPUS: XXXXX
-'''
+```
+
 7) If you deployed to Heroku, use to set the environment variables
-'''
+
+```
 $ figaro heroku:set -e production
-'''
+```
 
 ## Author
 [Matthieu Varagnat](https://twitter.com/MVaragnat)
