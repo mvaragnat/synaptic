@@ -1,0 +1,115 @@
+<script type="text/javascript">
+(function () {
+    var removeSuccess;
+    removeSuccess = function () {
+        return $('.button-m').removeClass('success');
+    };
+    $(document).ready(function () {
+        return $('.button-m').click(function () {
+            $(this).addClass('success');
+            //return setTimeout(removeSuccess, 22000);
+        });
+    });
+}.call(this));
+</script>
+
+<!--Search-->
+<section>
+  <div class="container">
+    <div class="center spacerx">
+
+      <div class="spacerxx"></div>
+
+      <div class="center alert alert-success" id="thanks" style="display: none;"></div>
+
+      <h1 class="text-color2">Discover great content</h1>
+    </div>
+
+
+    <div class="col-md-8 col-md-offset-2" id="homelink">
+      <%= form_tag(conceptual_search_path, {remote: true, id: "form"}) do %>
+        <label class="address">
+          <div class="spacer2"></div>
+          <h4 class="text-justify text-color2">Enter the URL of an article that you found interesting, and we'll recommend to you news articles, Wikipedia entries, TED talks and more.</h4>
+          <h4 class="text-right visible-md visible-lg visible-sm"><small>Synaptic is the first artificial intelligence content discovery engine powered by <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/" target="_blank">IBM Watson</a>.</small></h4>
+          <h4 class="text-justify visible-xs"><small>Synaptic is the first artificial intelligence content discovery engine powered by <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/" target="_blank">IBM Watson</a>.</small></h4>
+          <div class="center">
+            <div class="spacer2"></div>
+            <%= url_field_tag :address, nil, :class => "input", :id => "address" %>
+          </div>
+          <p class="text-center text-color2">(English only for now)</p>
+        </label>
+    </div>
+  </div>
+
+        <a class="button-m" role="button" id="btn" disabled="false">
+          <div class="icon">
+            <i class="fa fa-search"></i>
+            <i class="fa fa-check"></i>
+          </div>
+          <span>Explore</span>
+        </a>
+
+        <div class="spacer3"></div>
+      <% end %>
+
+</section>
+<!--Search-->
+
+
+
+
+<!--Result-->
+<section>
+  <div class="wrapper fondgris">
+    <div class="spacer3"></div>
+    <div class="container">
+      <div id="results" class='center row'></div>
+    </div>
+  </div>
+</section>
+
+
+<script type="text/javascript">
+  function isUrlValid(url) {
+    // if no url, false
+    if (url.length == 0) {
+      return false;
+    }
+    // if user has not entered http:// https:// or ftp:// assume they mean http://
+    else if (!/^(https?|ftp):\/\//i.test(url)) {
+      url = 'http://'+url; // set both the value
+      $('#address').val(url); // also update the form element
+    }
+
+    return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+  }
+
+  $('#btn').on('click', function(e){
+    //url check
+    e.preventDefault();
+    var address_to_check = $('#address').val();
+
+    //prevent double sending
+    var alreadyDisabled = $(this).prop("disabled");
+
+    if (alreadyDisabled){
+      //do nothing
+    }
+    else{
+      $(this).prop("disabled", true);
+
+      if (isUrlValid(address_to_check)){
+        $('#results').html("<div class='spacer2'></div><h2 class='text-color2'>Querying your article...</h2><div class='spacer2'></div>");
+        $('#form').submit();
+      }
+      else{
+        alert("Please enter a valid URL (website, blog post etc)");
+        $(this).prop("disabled", false);
+      }
+    }
+  });
+
+  var displayOnResults = true;
+
+</script>

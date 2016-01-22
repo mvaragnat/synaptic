@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="AI-based content discovery. Explore topics and find interesting articles with our AI recommendation engine."/>
+      <meta name="keywords" content="AI, Watson, artificial intelligence, content, articles, news, reading"/>
+      <meta property="og:image" content="http://synaptic.herokuapp.com/images/logo_synaptic_fb1.png"/>
+      <meta property="og:title" content="Synaptic | Find great content"/>
+      <meta property="og:description" content="AI-based content discovery. Explore topics and find interesting articles with our AI recommendation engine."/>
+      <link rel="image_src" href="http://synaptic.herokuapp.com/images/logo_synaptic_fb1.png" />
+      <meta property="og:image" content="http://synaptic.herokuapp.com/images/logo_synaptic_fb1.png" />
+      <link rel="target_url" href="http://synaptic.herokuapp.com" />
+      <meta property="og:url" content="http://synaptic.herokuapp.com" />
+
+
+      <title>Synaptic | Find great content</title>
+      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+      <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <%= render "layouts/header" %>
+
+    <% flash.each do |key, value| %>
+      <div class="spacer3"></div>
+      <div class="spacer2 visible-sm visible-xs"></div>
+      <div class="spacer1 visible-sm visible-xs"></div>
+      <div class="spacer1 visible-sm visible-xs"></div>
+
+        <%= content_tag(:div, value, :class => "center alert alert-#{key}")%>
+      <% end %>
+
+  <div class="page-wrap">
+    <%= yield %>
+  </div>
+
+    <%= render "layouts/footer"%>
+  </body>
+</html>

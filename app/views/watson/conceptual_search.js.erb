@@ -1,0 +1,87 @@
+
+<% if @error %>
+  console.log("Conceptual search error <%=j @error.to_s %>");
+  $('#results').text("An error happened. Please retry");
+
+<% else%>
+  console.log("Conceptual search OK");
+
+  $('#results').text("");
+
+  //scroll to results
+  $("html, body").animate({
+    scrollTop: ($('#results').offset().top - 90) + "px"
+    }, {
+    duration: 700,
+    easing: "swing"
+  });
+
+  $('#results').text("");
+
+  <%# server sends back title and summary %>
+  var text_html = "<div class='spacer2'></div><div class='col-md-4 col-xs-12'><h3 class='textdarkblue'><%= @title %></h3><h3 class='text-justify textdarkblue'><small><%= @summary %></small></h3></div>";
+  text_html += "<div class='col-md-8 col-xs-12 center'><h3 class='textdarkblue'>This might be of interest to you: </h3>";
+  text_html += "<div class='row'>";
+
+  <%# server sends back list of elements %>
+  <%if @results
+      @results.each do |label, summary, score, address| %>
+        text_html += "<div class='col-md-4 col-xs-6 boxf article'><a href='<%=j address %>' target='_blank'><div class='inside'><h4><%=j label %></h4> <h4 class='text-justify'><small><%=j summary %></small></h4><h4><small>Confidence score: <%= (score*100).to_i %>%</small></h4></div></a></div>";
+    <% end
+    end %>
+
+  text_html += "</div><div class='row'>";
+
+  <%# server sends back list of TED talks %>
+  <%if @ted
+      @ted.each do |label, summary, score, address, thumbnail| %>
+        text_html += "<div class='col-md-4 col-xs-6 boxf ted'><a href='<%=j address %>' target='_blank'><div class='inside'>";
+          text_html += "<img src='<%=j thumbnail %>' class='thumbnailTed'>";
+          text_html += "<h4 class='textdarkblue'><%=j label %></h4>";
+          text_html += "<h4 class='text-justify'><small><%=j summary %></small></h4>"
+          text_html += "<h4><small>TED. Confidence score: <%= (score*100).to_i %>%</small></h4>";
+        text_html += "</div></a></div>";
+    <% end
+    end %>
+
+  text_html += "</div><div class='row'>";
+
+  <%# server sends back list of Wikipedia pages %>
+  <%if @concepts
+      @concepts.each do |concept, score, address| %>
+        text_html += "<div class='col-md-4 col-xs-6 boxf concept'><a href='<%=j address %>' target='_blank'><h4 class='inside'><%= concept %></br><small>Wikipedia. Confidence score: <%= (score*100).to_i %>%</small></h4></a></div>";
+    <% end
+    end %>
+
+  text_html += "</div><div class='spacer'></div>";
+
+  $('#results').append(text_html);
+
+  <%# after displaying results, initiate saving element to Watson %>
+  $.ajaxSetup({
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      }
+  });
+
+  var params = {};
+  params["address"] = $('#address').val();
+
+  var ajaxRequest = $.post(
+    "/send_element_from_address",
+    params)
+
+  ajaxRequest.success(function(resp){
+    console.log("Element save success");
+  });
+
+  ajaxRequest.fail(function(resp){
+    console.log("Element save error");
+  });
+
+<% end %>
+
+//reactivate button after result displayed
+$('#btn').prop("disabled", false);
+$('.button-m').removeClass('success')
+
