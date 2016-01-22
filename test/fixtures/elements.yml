@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  url: MyString
+  address: MyString
   title: MyString
   summary: MyString
+  content: MyString
 
-two:
-  url: MyString
+one:
+  address: MyString
   title: MyString
   summary: MyString
+  content: MyString
